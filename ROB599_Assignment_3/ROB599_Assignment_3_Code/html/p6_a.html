@@ -1,0 +1,754 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>p6_a</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-18">
+<meta name="DC.source" content="p6_a.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="comment">%P6</span>
+
+<span class="keyword">function</span> [qd1, vd1, ad1, qd2, vd2, ad2] = generate_trajectory(t)
+    <span class="comment">% Time breakpoints</span>
+    t_waypoints = [0 2 4];
+
+    <span class="comment">% Waypoints for position q(t) for both joints</span>
+    waypoints = [0, pi/2, 0];   <span class="comment">% Desired positions for both joints</span>
+
+    <span class="comment">% Desired velocities for both joints</span>
+    velocities = [0, 0, 0];     <span class="comment">% Desired velocities for both joints</span>
+
+    <span class="comment">% Generate cubic polynomial trajectory</span>
+    [qd, vd, ad] = cubicpolytraj(waypoints, t_waypoints, t, <span class="keyword">...</span>
+                                 <span class="string">'VelocityBoundaryCondition'</span>, velocities);
+
+    <span class="comment">% Assign the same trajectory to both joints</span>
+    qd1 = qd; vd1 = vd; ad1 = ad;  <span class="comment">% For joint 1</span>
+    qd2 = qd; vd2 = vd; ad2 = ad;  <span class="comment">% For joint 2</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> xdot = robot_dynamics(t, x, para)
+    <span class="comment">% Extract joint positions and velocities</span>
+    q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+
+    <span class="comment">% Desired trajectory at time t</span>
+    [qd, vd, ad] = generate_trajectory(t);  <span class="comment">% Get desired position, velocity, acceleration</span>
+    q1d = qd;  <span class="comment">% Same trajectory for both q1 and q2</span>
+    q2d = qd;
+
+    <span class="comment">% Ensure that vd and ad are vectors with two identical elements</span>
+    Vd = [vd; vd];  <span class="comment">% Both joints have the same desired velocity</span>
+    Ad = [ad; ad];  <span class="comment">% Both joints have the same desired acceleration</span>
+
+    Aq = zeros(2,1);
+    Aq(1)= Ad(1) + para.Kp1*(q1d - q1) + para.Kd1*(Vd(1)-q1dot);
+    Aq(2)= Ad(2) + para.Kp2*(q2d - q2) + para.Kd2*(Vd(2)-q2dot);
+
+
+    <span class="comment">% Mass/inertia matrix D(q)</span>
+    D = zeros(2, 2);
+    D(1,1) = para.m1 * para.lc1^2 + para.m2 * (para.l1^2 + para.lc2^2 + 2 * para.l1 * para.lc2 * cos(q2)) + para.I1 + para.I2;
+    D(1,2) = para.m2 * (para.lc2^2 + para.l1 * para.lc2 * cos(q2)) + para.I2;
+    D(2,1) = D(1,2);
+    D(2,2) = para.m2 * para.lc2^2 + para.I2;
+
+    <span class="comment">% Coriolis matrix C(q,qdot)</span>
+    C = zeros(2, 2);
+    C(1, 1) = -para.m2 * para.l1 * para.lc2 * sin(q2) * q2dot;
+    C(1, 2) = -para.m2 * para.l1 * para.lc2 * sin(q2) * (q1dot + q2dot);
+    C(2, 1) = para.m2 * para.l1 * para.lc2 * sin(q2) * q1dot;
+    C(2, 2) = 0;
+
+    <span class="comment">% Gravity terms N(q)</span>
+    N = zeros(2, 1);
+    N(1) = para.m1 * para.g * para.lc1 * cos(q1) + para.m2 * para.g * (para.l1 * cos(q1) + para.lc2 * cos(q1 + q2));
+    N(2) = para.m2 * para.g * para.lc2 * cos(q1 + q2);
+
+    <span class="comment">% Feed back new controller</span>
+    Tau = D*Aq + C*[q1dot; q2dot] + N;
+
+    <span class="comment">% Limit the torques to the range [-50, 50]</span>
+    Tau(1) = max(min(Tau(1), 50), -50);
+    Tau(2) = max(min(Tau(2), 50), -50);
+
+    <span class="comment">% Calculate accelerations</span>
+    a = [Tau(1); Tau(2)] - C * [q1dot; q2dot] - N;
+
+    <span class="comment">% Solve for joint accelerations using inverse of D matrix</span>
+    qdoubledot = D \ a;
+
+    <span class="comment">% Return derivative of state vector</span>
+    xdot = [q1dot; qdoubledot(1); q2dot; qdoubledot(2)];
+<span class="keyword">end</span>
+
+<span class="comment">% Define the parameters in the 'para' structure</span>
+para.m1 = 7.848;
+para.m2 = 4.49;
+para.l1 = 0.3;
+para.lc1 = 0.1554;
+para.lc2 = 0.0341;
+para.I1 = 0.176;
+para.I2 = 0.0411;
+para.g = 9.81;
+para.Kp1 = 50;
+para.Kp2 = 50;
+para.Kd1 = 10;
+para.Kd2 = 10;
+
+<span class="comment">% Define the simulation time span and initial conditions</span>
+tspan = [0 4];  <span class="comment">% Define the time span for simulation</span>
+x0 = [0.05; 0; 0.05; 0];  <span class="comment">% Initial conditions for [q1; q1dot; q2; q2dot]</span>
+
+<span class="comment">% Run the simulation using ODE45</span>
+[t, x] = ode45(@(t, x) robot_dynamics(t, x, para), tspan, x0);
+
+<span class="comment">% Initialize arrays for accelerations</span>
+joint_accelerations = zeros(length(t), 2); <span class="comment">% For both joints</span>
+
+<span class="comment">% Calculate torques and tracking errors over time</span>
+tau1 = zeros(length(t), 1);
+tau2 = zeros(length(t), 1);
+tracking_error_q1 = zeros(length(t), 1);
+tracking_error_q2 = zeros(length(t), 1);
+tracking_error_v1 = zeros(length(t), 1); <span class="comment">% Preallocated</span>
+tracking_error_v2 = zeros(length(t), 1); <span class="comment">% Preallocated</span>
+tracking_error_a1 = zeros(length(t), 1); <span class="comment">% Preallocated</span>
+tracking_error_a2 = zeros(length(t), 1); <span class="comment">% Preallocated</span>
+
+<span class="keyword">for</span> i = 1:length(t)
+    <span class="comment">% Desired trajectory at time t(i)</span>
+    [qd, vd, ad] = generate_trajectory(t(i));  <span class="comment">% Get desired trajectory</span>
+    q1d = qd;  <span class="comment">% Desired position for joint 1</span>
+    q2d = qd;  <span class="comment">% Desired position for joint 2</span>
+
+    <span class="comment">% Ensure that vd and ad are scalars</span>
+    Vd = [vd; vd];  <span class="comment">% Same velocity for both joints</span>
+    Ad = [ad; ad];  <span class="comment">% Same acceleration for both joints</span>
+
+    <span class="comment">% Extract current states</span>
+    q1 = x(i, 1);
+    q1dot = x(i, 2);
+    q2 = x(i, 3);
+    q2dot = x(i, 4);
+
+    <span class="comment">% Calculate Aq using the same method as in robot_dynamics</span>
+    Aq = zeros(2,1);
+    Aq(1) = Ad(1) + para.Kp1 * (q1d - q1) + para.Kd1 * (Vd(1) - q1dot);
+    Aq(2) = Ad(2) + para.Kp2 * (q2d - q2) + para.Kd2 * (Vd(2) - q2dot);
+
+    <span class="comment">% Calculate the mass matrix D for the current state</span>
+    D_current = zeros(2, 2);
+    D_current(1,1) = para.m1 * para.lc1^2 + para.m2 * (para.l1^2 + para.lc2^2 + 2 * para.l1 * para.lc2 * cos(q2)) + para.I1 + para.I2;
+    D_current(1,2) = para.m2 * (para.lc2^2 + para.l1 * para.lc2 * cos(q2)) + para.I2;
+    D_current(2,1) = D_current(1,2);
+    D_current(2,2) = para.m2 * para.lc2^2 + para.I2;
+
+    <span class="comment">% Coriolis matrix C for the current state</span>
+    C_current = zeros(2, 2);
+    C_current(1, 1) = -para.m2 * para.l1 * para.lc2 * sin(q2) * q2dot;
+    C_current(1, 2) = -para.m2 * para.l1 * para.lc2 * sin(q2) * (q1dot + q2dot);
+    C_current(2, 1) = para.m2 * para.l1 * para.lc2 * sin(q2) * q1dot;
+    C_current(2, 2) = 0;
+
+    <span class="comment">% Gravity terms N for the current state</span>
+    N_current = zeros(2, 1);
+    N_current(1) = para.m1 * para.g * para.lc1 * cos(q1) + para.m2 * para.g * (para.l1 * cos(q1) + para.lc2 * cos(q1 + q2));
+    N_current(2) = para.m2 * para.g * para.lc2 * cos(q1 + q2);
+
+    <span class="comment">% Calculate feed-forward torque</span>
+    Tau = D_current * Aq + C_current * [q1dot; q2dot] + N_current;
+
+    <span class="comment">% Compute control torques</span>
+    tau1(i) = Tau(1);
+    tau2(i) = Tau(2);
+
+    <span class="comment">% Limit the torques to the range [-50, 50]</span>
+    tau1(i) = max(min(tau1(i), 50), -50);
+    tau2(i) = max(min(tau2(i), 50), -50);
+
+    <span class="comment">% Compute joint accelerations using the current torque values</span>
+    a_current = [tau1(i); tau2(i)] - C_current * [q1dot; q2dot] - N_current;
+    joint_accelerations(i, :) = D_current \ a_current;  <span class="comment">% Joint accelerations</span>
+
+    <span class="comment">% Track position and velocity errors</span>
+    tracking_error_q1(i) = q1d - q1;
+    tracking_error_q2(i) = q2d - q2;
+    tracking_error_v1(i) = Vd(1) - q1dot;
+    tracking_error_v2(i) = Vd(2) - q2dot;
+    tracking_error_a1(i) = Ad(1) - joint_accelerations(i, 1);
+    tracking_error_a2(i) = Ad(2) - joint_accelerations(i, 2);
+<span class="keyword">end</span>
+
+<span class="comment">% Plot joint positions</span>
+figure;
+
+subplot(3, 1, 1);
+plot(t, x(:, 1), <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">on</span>;
+plot(t, x(:, 3), <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+plot(t, qd, <span class="string">'k--'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">off</span>;
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Position (rad)'</span>);
+title(<span class="string">'Actual Joint Positions'</span>);
+legend(<span class="string">'Joint 1'</span>, <span class="string">'Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot joint velocities</span>
+subplot(3, 1, 2);
+plot(t, x(:, 2), <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">on</span>;
+plot(t, x(:, 4), <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+plot(t, vd, <span class="string">'k--'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">off</span>;
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Velocity (rad/s)'</span>);
+title(<span class="string">'Actual Joint Velocities'</span>);
+legend(<span class="string">'Joint 1'</span>, <span class="string">'Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot joint torques</span>
+subplot(3, 1, 3);
+plot(t, tau1, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">on</span>;
+plot(t, tau2, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+hold <span class="string">off</span>;
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Torque (Nm)'</span>);
+title(<span class="string">'Joint Torques'</span>);
+legend(<span class="string">'Joint 1 Torque'</span>, <span class="string">'Joint 2 Torque'</span>);
+ylim([-5 30]);  <span class="comment">% Set y-axis limits from -100 to +100</span>
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot tracking errors</span>
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_q1, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Error (rad)'</span>);
+title(<span class="string">'Tracking Error for Joint 1'</span>);
+grid <span class="string">on</span>;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_q2, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Error (rad)'</span>);
+title(<span class="string">'Tracking Error for Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% plot velocity error</span>
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_v1, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (sec)'</span>);
+ylabel(<span class="string">'Error (rad/sec)'</span>);
+title(<span class="string">'velocity Error for Joint 1'</span>);
+grid <span class="string">on</span>;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_v2, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (sec)'</span>);
+ylabel(<span class="string">'Error (rad/sec)'</span>);
+title(<span class="string">'velocity Error for Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">%Plot acceleration error</span>
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_a1, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (sec)'</span>);
+ylabel(<span class="string">'Error (rad/sec^2)'</span>);
+title(<span class="string">'acceleration Error for Joint 1'</span>);
+grid <span class="string">on</span>;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_a2, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5);
+xlabel(<span class="string">'Time (sec)'</span>);
+ylabel(<span class="string">'Error (rad/sec^2)'</span>);
+title(<span class="string">'acceleration Error for Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot joint accelerations</span>
+figure;
+subplot(2, 1, 1);
+plot(t, joint_accelerations(:, 1), <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 1.5); <span class="comment">% Joint 1 acceleration</span>
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Acceleration (rad/s^2)'</span>);
+title(<span class="string">'Joint 1 Acceleration'</span>);
+grid <span class="string">on</span>;
+
+subplot(2, 1, 2);
+plot(t, joint_accelerations(:, 2), <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 1.5); <span class="comment">% Joint 2 acceleration</span>
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Acceleration (rad/s^2)'</span>);
+title(<span class="string">'Joint 2 Acceleration'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Define the time span for the trajectory</span>
+tspan = linspace(0, 4, 100);  <span class="comment">% 100 points from 0 to 4 seconds</span>
+
+<span class="comment">% Preallocate arrays for joint trajectories</span>
+qd1 = zeros(size(tspan));
+vd1 = zeros(size(tspan));
+ad1 = zeros(size(tspan));
+qd2 = zeros(size(tspan));
+vd2 = zeros(size(tspan));
+ad2 = zeros(size(tspan));
+
+<span class="comment">% Generate the trajectory for each time point</span>
+<span class="keyword">for</span> i = 1:length(tspan)
+    [qd1(i), vd1(i), ad1(i), qd2(i), vd2(i), ad2(i)] = generate_trajectory(tspan(i));
+<span class="keyword">end</span>
+
+<span class="comment">% Plot desired positions for both joints</span>
+figure;
+subplot(3, 1, 1);  <span class="comment">% 3 rows, 1 column, 1st subplot</span>
+plot(tspan, qd1, <span class="string">'LineWidth'</span>, 2);
+hold <span class="string">on</span>;
+plot(tspan, qd2, <span class="string">'LineWidth'</span>, 2);
+title(<span class="string">'Desired Position (q) for Both Joints'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Position (rad)'</span>);
+legend(<span class="string">'Joint 1'</span>, <span class="string">'Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot desired velocities for both joints</span>
+subplot(3, 1, 2);  <span class="comment">% 3 rows, 1 column, 2nd subplot</span>
+plot(tspan, vd1, <span class="string">'LineWidth'</span>, 2);
+hold <span class="string">on</span>;
+plot(tspan, vd2, <span class="string">'LineWidth'</span>, 2);
+title(<span class="string">'Desired Velocity (v) for Both Joints'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Velocity (rad/s)'</span>);
+legend(<span class="string">'Joint 1'</span>, <span class="string">'Joint 2'</span>);
+grid <span class="string">on</span>;
+
+<span class="comment">% Plot desired accelerations for both joints</span>
+subplot(3, 1, 3);  <span class="comment">% 3 rows, 1 column, 3rd subplot</span>
+plot(tspan, ad1, <span class="string">'LineWidth'</span>, 2);
+hold <span class="string">on</span>;
+plot(tspan, ad2, <span class="string">'LineWidth'</span>, 2);
+title(<span class="string">'Desired Acceleration (a) for Both Joints'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Acceleration (rad/s^2)'</span>);
+legend(<span class="string">'Joint 1'</span>, <span class="string">'Joint 2'</span>);
+grid <span class="string">on</span>;
+</pre>
+<img vspace="5" hspace="5" src="p6_a_01.png" alt=""> <img vspace="5" hspace="5" src="p6_a_02.png" alt=""> <img vspace="5" hspace="5" src="p6_a_03.png" alt=""> <img vspace="5" hspace="5" src="p6_a_04.png" alt=""> <img vspace="5" hspace="5" src="p6_a_05.png" alt=""> <img vspace="5" hspace="5" src="p6_a_06.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%P6
+
+function [qd1, vd1, ad1, qd2, vd2, ad2] = generate_trajectory(t)
+    % Time breakpoints
+    t_waypoints = [0 2 4];
+
+    % Waypoints for position q(t) for both joints
+    waypoints = [0, pi/2, 0];   % Desired positions for both joints
+
+    % Desired velocities for both joints
+    velocities = [0, 0, 0];     % Desired velocities for both joints
+
+    % Generate cubic polynomial trajectory
+    [qd, vd, ad] = cubicpolytraj(waypoints, t_waypoints, t, ...
+                                 'VelocityBoundaryCondition', velocities);
+
+    % Assign the same trajectory to both joints
+    qd1 = qd; vd1 = vd; ad1 = ad;  % For joint 1
+    qd2 = qd; vd2 = vd; ad2 = ad;  % For joint 2
+end
+
+function xdot = robot_dynamics(t, x, para)
+    % Extract joint positions and velocities
+    q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+    
+    % Desired trajectory at time t
+    [qd, vd, ad] = generate_trajectory(t);  % Get desired position, velocity, acceleration
+    q1d = qd;  % Same trajectory for both q1 and q2
+    q2d = qd;
+
+    % Ensure that vd and ad are vectors with two identical elements
+    Vd = [vd; vd];  % Both joints have the same desired velocity
+    Ad = [ad; ad];  % Both joints have the same desired acceleration
+
+    Aq = zeros(2,1);
+    Aq(1)= Ad(1) + para.Kp1*(q1d - q1) + para.Kd1*(Vd(1)-q1dot);
+    Aq(2)= Ad(2) + para.Kp2*(q2d - q2) + para.Kd2*(Vd(2)-q2dot);
+
+    
+    % Mass/inertia matrix D(q)
+    D = zeros(2, 2);
+    D(1,1) = para.m1 * para.lc1^2 + para.m2 * (para.l1^2 + para.lc2^2 + 2 * para.l1 * para.lc2 * cos(q2)) + para.I1 + para.I2;
+    D(1,2) = para.m2 * (para.lc2^2 + para.l1 * para.lc2 * cos(q2)) + para.I2;
+    D(2,1) = D(1,2);
+    D(2,2) = para.m2 * para.lc2^2 + para.I2;
+
+    % Coriolis matrix C(q,qdot)
+    C = zeros(2, 2);
+    C(1, 1) = -para.m2 * para.l1 * para.lc2 * sin(q2) * q2dot;
+    C(1, 2) = -para.m2 * para.l1 * para.lc2 * sin(q2) * (q1dot + q2dot);
+    C(2, 1) = para.m2 * para.l1 * para.lc2 * sin(q2) * q1dot;
+    C(2, 2) = 0;
+
+    % Gravity terms N(q)
+    N = zeros(2, 1);
+    N(1) = para.m1 * para.g * para.lc1 * cos(q1) + para.m2 * para.g * (para.l1 * cos(q1) + para.lc2 * cos(q1 + q2));
+    N(2) = para.m2 * para.g * para.lc2 * cos(q1 + q2);
+    
+    % Feed back new controller
+    Tau = D*Aq + C*[q1dot; q2dot] + N;
+
+    % Limit the torques to the range [-50, 50]
+    Tau(1) = max(min(Tau(1), 50), -50);
+    Tau(2) = max(min(Tau(2), 50), -50);
+
+    % Calculate accelerations
+    a = [Tau(1); Tau(2)] - C * [q1dot; q2dot] - N;
+    
+    % Solve for joint accelerations using inverse of D matrix
+    qdoubledot = D \ a;
+
+    % Return derivative of state vector
+    xdot = [q1dot; qdoubledot(1); q2dot; qdoubledot(2)];
+end
+
+% Define the parameters in the 'para' structure
+para.m1 = 7.848;
+para.m2 = 4.49;
+para.l1 = 0.3;
+para.lc1 = 0.1554;
+para.lc2 = 0.0341;
+para.I1 = 0.176;
+para.I2 = 0.0411;
+para.g = 9.81;
+para.Kp1 = 50;
+para.Kp2 = 50;
+para.Kd1 = 10;
+para.Kd2 = 10;
+
+% Define the simulation time span and initial conditions
+tspan = [0 4];  % Define the time span for simulation
+x0 = [0.05; 0; 0.05; 0];  % Initial conditions for [q1; q1dot; q2; q2dot]
+
+% Run the simulation using ODE45
+[t, x] = ode45(@(t, x) robot_dynamics(t, x, para), tspan, x0);
+
+% Initialize arrays for accelerations
+joint_accelerations = zeros(length(t), 2); % For both joints
+
+% Calculate torques and tracking errors over time
+tau1 = zeros(length(t), 1);
+tau2 = zeros(length(t), 1);
+tracking_error_q1 = zeros(length(t), 1);
+tracking_error_q2 = zeros(length(t), 1);
+tracking_error_v1 = zeros(length(t), 1); % Preallocated
+tracking_error_v2 = zeros(length(t), 1); % Preallocated
+tracking_error_a1 = zeros(length(t), 1); % Preallocated
+tracking_error_a2 = zeros(length(t), 1); % Preallocated
+
+for i = 1:length(t)
+    % Desired trajectory at time t(i)
+    [qd, vd, ad] = generate_trajectory(t(i));  % Get desired trajectory
+    q1d = qd;  % Desired position for joint 1
+    q2d = qd;  % Desired position for joint 2
+    
+    % Ensure that vd and ad are scalars
+    Vd = [vd; vd];  % Same velocity for both joints
+    Ad = [ad; ad];  % Same acceleration for both joints
+    
+    % Extract current states
+    q1 = x(i, 1);
+    q1dot = x(i, 2);
+    q2 = x(i, 3);
+    q2dot = x(i, 4);
+
+    % Calculate Aq using the same method as in robot_dynamics
+    Aq = zeros(2,1);
+    Aq(1) = Ad(1) + para.Kp1 * (q1d - q1) + para.Kd1 * (Vd(1) - q1dot);
+    Aq(2) = Ad(2) + para.Kp2 * (q2d - q2) + para.Kd2 * (Vd(2) - q2dot);
+
+    % Calculate the mass matrix D for the current state
+    D_current = zeros(2, 2);
+    D_current(1,1) = para.m1 * para.lc1^2 + para.m2 * (para.l1^2 + para.lc2^2 + 2 * para.l1 * para.lc2 * cos(q2)) + para.I1 + para.I2;
+    D_current(1,2) = para.m2 * (para.lc2^2 + para.l1 * para.lc2 * cos(q2)) + para.I2;
+    D_current(2,1) = D_current(1,2);
+    D_current(2,2) = para.m2 * para.lc2^2 + para.I2;
+
+    % Coriolis matrix C for the current state
+    C_current = zeros(2, 2);
+    C_current(1, 1) = -para.m2 * para.l1 * para.lc2 * sin(q2) * q2dot;
+    C_current(1, 2) = -para.m2 * para.l1 * para.lc2 * sin(q2) * (q1dot + q2dot);
+    C_current(2, 1) = para.m2 * para.l1 * para.lc2 * sin(q2) * q1dot;
+    C_current(2, 2) = 0;
+
+    % Gravity terms N for the current state
+    N_current = zeros(2, 1);
+    N_current(1) = para.m1 * para.g * para.lc1 * cos(q1) + para.m2 * para.g * (para.l1 * cos(q1) + para.lc2 * cos(q1 + q2));
+    N_current(2) = para.m2 * para.g * para.lc2 * cos(q1 + q2);
+
+    % Calculate feed-forward torque
+    Tau = D_current * Aq + C_current * [q1dot; q2dot] + N_current;
+
+    % Compute control torques
+    tau1(i) = Tau(1);
+    tau2(i) = Tau(2);
+
+    % Limit the torques to the range [-50, 50]
+    tau1(i) = max(min(tau1(i), 50), -50);
+    tau2(i) = max(min(tau2(i), 50), -50);
+
+    % Compute joint accelerations using the current torque values
+    a_current = [tau1(i); tau2(i)] - C_current * [q1dot; q2dot] - N_current;
+    joint_accelerations(i, :) = D_current \ a_current;  % Joint accelerations
+
+    % Track position and velocity errors
+    tracking_error_q1(i) = q1d - q1;
+    tracking_error_q2(i) = q2d - q2;
+    tracking_error_v1(i) = Vd(1) - q1dot;
+    tracking_error_v2(i) = Vd(2) - q2dot;
+    tracking_error_a1(i) = Ad(1) - joint_accelerations(i, 1);
+    tracking_error_a2(i) = Ad(2) - joint_accelerations(i, 2);
+end
+
+% Plot joint positions
+figure;
+
+subplot(3, 1, 1);
+plot(t, x(:, 1), 'b', 'LineWidth', 1.5);
+hold on;
+plot(t, x(:, 3), 'r', 'LineWidth', 1.5);
+plot(t, qd, 'kREPLACE_WITH_DASH_DASH', 'LineWidth', 1.5);
+hold off;
+xlabel('Time (s)');
+ylabel('Position (rad)');
+title('Actual Joint Positions');
+legend('Joint 1', 'Joint 2');
+grid on;
+
+% Plot joint velocities
+subplot(3, 1, 2);
+plot(t, x(:, 2), 'b', 'LineWidth', 1.5);
+hold on;
+plot(t, x(:, 4), 'r', 'LineWidth', 1.5);
+plot(t, vd, 'kREPLACE_WITH_DASH_DASH', 'LineWidth', 1.5);
+hold off;
+xlabel('Time (s)');
+ylabel('Velocity (rad/s)');
+title('Actual Joint Velocities');
+legend('Joint 1', 'Joint 2');
+grid on;
+
+% Plot joint torques
+subplot(3, 1, 3);
+plot(t, tau1, 'b', 'LineWidth', 1.5);
+hold on;
+plot(t, tau2, 'r', 'LineWidth', 1.5);
+hold off;
+xlabel('Time (s)');
+ylabel('Torque (Nm)');
+title('Joint Torques');
+legend('Joint 1 Torque', 'Joint 2 Torque');
+ylim([-5 30]);  % Set y-axis limits from -100 to +100
+grid on;
+
+% Plot tracking errors
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_q1, 'b', 'LineWidth', 1.5);
+xlabel('Time (s)');
+ylabel('Error (rad)');
+title('Tracking Error for Joint 1');
+grid on;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_q2, 'r', 'LineWidth', 1.5);
+xlabel('Time (s)');
+ylabel('Error (rad)');
+title('Tracking Error for Joint 2');
+grid on;
+
+% plot velocity error 
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_v1, 'b', 'LineWidth', 1.5);
+xlabel('Time (sec)');
+ylabel('Error (rad/sec)');
+title('velocity Error for Joint 1');
+grid on;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_v2, 'r', 'LineWidth', 1.5);
+xlabel('Time (sec)');
+ylabel('Error (rad/sec)');
+title('velocity Error for Joint 2');
+grid on;
+
+%Plot acceleration error 
+figure;
+
+subplot(2, 1, 1);
+plot(t, tracking_error_a1, 'b', 'LineWidth', 1.5);
+xlabel('Time (sec)');
+ylabel('Error (rad/sec^2)');
+title('acceleration Error for Joint 1');
+grid on;
+
+subplot(2, 1, 2);
+plot(t, tracking_error_a2, 'r', 'LineWidth', 1.5);
+xlabel('Time (sec)');
+ylabel('Error (rad/sec^2)');
+title('acceleration Error for Joint 2');
+grid on;
+
+% Plot joint accelerations
+figure;
+subplot(2, 1, 1);
+plot(t, joint_accelerations(:, 1), 'b', 'LineWidth', 1.5); % Joint 1 acceleration
+xlabel('Time (s)');
+ylabel('Acceleration (rad/s^2)');
+title('Joint 1 Acceleration');
+grid on;
+
+subplot(2, 1, 2);
+plot(t, joint_accelerations(:, 2), 'r', 'LineWidth', 1.5); % Joint 2 acceleration
+xlabel('Time (s)');
+ylabel('Acceleration (rad/s^2)');
+title('Joint 2 Acceleration');
+grid on;
+
+% Define the time span for the trajectory
+tspan = linspace(0, 4, 100);  % 100 points from 0 to 4 seconds
+
+% Preallocate arrays for joint trajectories
+qd1 = zeros(size(tspan));
+vd1 = zeros(size(tspan));
+ad1 = zeros(size(tspan));
+qd2 = zeros(size(tspan));
+vd2 = zeros(size(tspan));
+ad2 = zeros(size(tspan));
+
+% Generate the trajectory for each time point
+for i = 1:length(tspan)
+    [qd1(i), vd1(i), ad1(i), qd2(i), vd2(i), ad2(i)] = generate_trajectory(tspan(i));
+end
+
+% Plot desired positions for both joints
+figure;
+subplot(3, 1, 1);  % 3 rows, 1 column, 1st subplot
+plot(tspan, qd1, 'LineWidth', 2);
+hold on;
+plot(tspan, qd2, 'LineWidth', 2);
+title('Desired Position (q) for Both Joints');
+xlabel('Time (s)');
+ylabel('Position (rad)');
+legend('Joint 1', 'Joint 2');
+grid on;
+
+% Plot desired velocities for both joints
+subplot(3, 1, 2);  % 3 rows, 1 column, 2nd subplot
+plot(tspan, vd1, 'LineWidth', 2);
+hold on;
+plot(tspan, vd2, 'LineWidth', 2);
+title('Desired Velocity (v) for Both Joints');
+xlabel('Time (s)');
+ylabel('Velocity (rad/s)');
+legend('Joint 1', 'Joint 2');
+grid on;
+
+% Plot desired accelerations for both joints
+subplot(3, 1, 3);  % 3 rows, 1 column, 3rd subplot
+plot(tspan, ad1, 'LineWidth', 2);
+hold on;
+plot(tspan, ad2, 'LineWidth', 2);
+title('Desired Acceleration (a) for Both Joints');
+xlabel('Time (s)');
+ylabel('Acceleration (rad/s^2)');
+legend('Joint 1', 'Joint 2');
+grid on;
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

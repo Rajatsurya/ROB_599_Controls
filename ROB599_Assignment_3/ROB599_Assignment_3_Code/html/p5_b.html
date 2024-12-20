@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>p5_b</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-18">
+<meta name="DC.source" content="p5_b.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="comment">%HW 3 P5 b</span>
+clear
+close <span class="string">all</span>
+clc
+<span class="keyword">function</span> [xdot,tau,error,cmd_val] = HW3_Q6(t,x)
+q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+
+m1 = 7.848;m2 = 4.49; l1 = 0.3;lc1 = 0.1554;
+lc2 = 0.0341;I1 = 0.176;I2 = 0.0411;
+g = 9.81;
+
+M(1,1) = m1*lc1^2 + m2*(l1^2 + lc2^2 + 2*l1*lc2*cos(q2)) + I1 + I2;
+M(1,2) = m2*(lc2^2 + l1*lc2*cos(q2)) + I2;
+M(2,1) = M(1,2);
+M(2,2) = m2*lc2^2 + I2;
+
+<span class="comment">% Coriolis matrix</span>
+C(1, 1) = -m2*l1*lc2*sin(q2)*q2dot;
+C(1, 2) = -m2*l1*lc2*sin(q2)*(q1dot + q2dot);
+C(2, 1) = m2*l1*lc2*sin(q2)*q1dot;
+C(2, 2) = 0;
+
+<span class="comment">%External forces (gravity etc)</span>
+N(1,1) = m1*g*lc1*cos(q1) + m2*g*(l1*cos(q1)+lc2*cos(q1 +q2));
+N(2,1) = m2*g*lc2*cos(q1 + q2);
+
+<span class="comment">%defining the control law</span>
+[qd, vd, ad] = cubicpoly([0, 2, 4], [0, pi/2, 0], [0, 0, 0], t);
+cmd_val = [qd, vd, ad];
+Kp1 = 50 ; Kd1 =10;
+Kp2 = 50; Kd2 = 10;
+
+
+tau(1,1) = Kp1*(qd - q1) + Kd1*(vd - q1dot);
+tau(2,1) = Kp2*(qd - q2) + Kd2*(vd - q2dot);
+error = [qd - q1 qd - q2 vd - q1dot vd - q2dot]';
+
+<span class="comment">%declaring the estimated variables for the feed forward equation</span>
+Mq_hat = 0.9*M; Cq_hat = 0.9*C; Nq_hat = 0.9*N;
+
+<span class="comment">%feed forward torque equation</span>
+tau_FF = Mq_hat*[ad;ad] +Cq_hat*[vd;vd]+ Nq_hat;
+
+<span class="comment">%feed forward + feed back equation</span>
+tau = tau+ tau_FF;
+
+
+<span class="comment">%employing the limitations</span>
+<span class="keyword">if</span> (tau(1,1)&lt;= -50)
+tau(1,1) = -50;
+<span class="keyword">end</span>
+<span class="keyword">if</span> (tau(1,1) &gt;= 50)
+tau(1,1) = 50;
+<span class="keyword">end</span>
+<span class="keyword">if</span> (tau(2,1)&lt;= -50)
+tau(2,1) = -50;
+<span class="keyword">end</span>
+<span class="keyword">if</span> (tau(2,1) &gt;= 50)
+tau(2,1) = 50;
+<span class="keyword">end</span>
+
+xdot = inv(M)*(tau - N -C*[q1dot;q2dot]);
+xdot(4,1) = xdot(2,1);
+xdot(2,1) = xdot(1,1);
+xdot(1,1) = x(2);
+xdot(3,1) = x(4);
+
+<span class="keyword">end</span> <span class="comment">%function end</span>
+
+q0 = [0.05 0 0.05 0]';
+[t,x]=ode45(@(t,x) HW3_Q6(t,x),0:0.01:4,q0);
+tau = zeros(length(t), 2);
+error = zeros(length(t), 4);
+cmd_val = zeros(length(t), 3);
+<span class="keyword">for</span> i = 1:length(t)
+[~, tau(i, :),error(i,:),cmd_val(i,:)] = HW3_Q6(t(i), x(i, :));
+<span class="keyword">end</span>
+
+figure(1)
+hold <span class="string">on</span>
+plot(t,x(:,1),<span class="string">'black'</span>)
+plot(t,x(:,3),<span class="string">'red'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'theta'</span>)
+title(<span class="string">'Robot Joint Position Response'</span>)
+legend(<span class="string">'joint response 1'</span>,<span class="string">'joint response 2'</span>)
+hold <span class="string">off</span>
+
+figure(2)
+hold <span class="string">on</span>
+plot(t,tau(:,1),<span class="string">'black'</span>)
+plot(t,tau(:,2),<span class="string">'red'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'Nm'</span>)
+title(<span class="string">'Robot Torque Response'</span>)
+legend(<span class="string">'joint torque 1'</span>,<span class="string">'joint torque 2'</span>)
+hold <span class="string">off</span>
+
+figure(3)
+hold <span class="string">on</span>
+plot(t,error(:,1),<span class="string">'black'</span>)
+plot(t,error(:,2),<span class="string">'red'</span>)
+title(<span class="string">'Position Error'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'m'</span>)
+legend(<span class="string">'position error 1'</span>,<span class="string">'position error 2'</span>)
+hold <span class="string">off</span>
+
+figure(4)
+hold <span class="string">on</span>
+plot(t,error(:,3),<span class="string">'black'</span>)
+plot(t,error(:,4),<span class="string">'red'</span>)
+title(<span class="string">'Velocity Error'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'m/s'</span>)
+legend(<span class="string">'velocity error 1'</span>,<span class="string">'velocity error 2'</span>)
+hold <span class="string">off</span>
+
+figure(5)
+plot(t,cmd_val(:,1),<span class="string">'black'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'position'</span>)
+title(<span class="string">'Reference Postion'</span>)
+figure(6)
+plot(t,cmd_val(:,2),<span class="string">'black'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'velocity'</span>)
+title(<span class="string">'Reference Velocity'</span>)
+figure(7)
+plot(t,cmd_val(:,3),<span class="string">'black'</span>)
+xlabel(<span class="string">'time'</span>)
+ylabel(<span class="string">'acceleration'</span>)
+title(<span class="string">'Reference Acceleration'</span>)
+
+disp(<span class="string">'Problem 5b: Impact of Reduced Dynamic Model on System Performance'</span>);
+disp(<span class="string">'---------------------------------------------------------------'</span>);
+
+<span class="comment">% Position</span>
+disp(<span class="string">'Position:'</span>);
+disp(<span class="string">'In problem 5b, the system will exhibit higher position tracking errors'</span>);
+disp(<span class="string">'due to the reduced compensation of dynamic forces.'</span>);
+disp(<span class="string">'The PD controller has to compensate for this underestimation, leading'</span>);
+disp(<span class="string">'to more oscillations or slower response times.'</span>);
+disp(<span class="string">' '</span>);
+
+<span class="comment">% Velocity</span>
+disp(<span class="string">'Velocity:'</span>);
+disp(<span class="string">'The velocity tracking error is larger in problem 5b as well, as the'</span>);
+disp(<span class="string">'system cannot follow the desired velocity as closely without the full'</span>);
+disp(<span class="string">'compensation from the dynamics.'</span>);
+disp(<span class="string">' '</span>);
+
+<span class="comment">% Acceleration</span>
+disp(<span class="string">'Acceleration:'</span>);
+disp(<span class="string">'Problem 5b will show larger acceleration tracking errors, especially'</span>);
+disp(<span class="string">'during phases of rapid changes in acceleration, since the underestimation'</span>);
+disp(<span class="string">'of M, C, and N reduces the controller''s ability to match the desired dynamics.'</span>);
+disp(<span class="string">' '</span>);
+
+<span class="comment">% General Conclusion</span>
+disp(<span class="string">'Conclusion:'</span>);
+disp(<span class="string">'In general, the reduced dynamic model in problem 5b results in higher tracking'</span>);
+disp(<span class="string">'errors (in terms of position, velocity, and acceleration), requiring the PD'</span>);
+disp(<span class="string">'controller to work harder and leading to a slight degradation in performance.'</span>);
+disp(<span class="string">'---------------------------------------------------------------'</span>);
+</pre>
+<pre class="codeoutput">Problem 5b: Impact of Reduced Dynamic Model on System Performance
+---------------------------------------------------------------
+Position:
+In problem 5b, the system will exhibit higher position tracking errors
+due to the reduced compensation of dynamic forces.
+The PD controller has to compensate for this underestimation, leading
+to more oscillations or slower response times.
+ 
+Velocity:
+The velocity tracking error is larger in problem 5b as well, as the
+system cannot follow the desired velocity as closely without the full
+compensation from the dynamics.
+ 
+Acceleration:
+Problem 5b will show larger acceleration tracking errors, especially
+during phases of rapid changes in acceleration, since the underestimation
+of M, C, and N reduces the controller's ability to match the desired dynamics.
+ 
+Conclusion:
+In general, the reduced dynamic model in problem 5b results in higher tracking
+errors (in terms of position, velocity, and acceleration), requiring the PD
+controller to work harder and leading to a slight degradation in performance.
+---------------------------------------------------------------
+</pre>
+<img vspace="5" hspace="5" src="p5_b_01.png" alt=""> <img vspace="5" hspace="5" src="p5_b_02.png" alt=""> <img vspace="5" hspace="5" src="p5_b_03.png" alt=""> <img vspace="5" hspace="5" src="p5_b_04.png" alt=""> <img vspace="5" hspace="5" src="p5_b_05.png" alt=""> <img vspace="5" hspace="5" src="p5_b_06.png" alt=""> <img vspace="5" hspace="5" src="p5_b_07.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%HW 3 P5 b
+clear
+close all
+clc
+function [xdot,tau,error,cmd_val] = HW3_Q6(t,x)
+q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+
+m1 = 7.848;m2 = 4.49; l1 = 0.3;lc1 = 0.1554;
+lc2 = 0.0341;I1 = 0.176;I2 = 0.0411;
+g = 9.81;
+
+M(1,1) = m1*lc1^2 + m2*(l1^2 + lc2^2 + 2*l1*lc2*cos(q2)) + I1 + I2;
+M(1,2) = m2*(lc2^2 + l1*lc2*cos(q2)) + I2;
+M(2,1) = M(1,2);
+M(2,2) = m2*lc2^2 + I2;
+
+% Coriolis matrix
+C(1, 1) = -m2*l1*lc2*sin(q2)*q2dot;
+C(1, 2) = -m2*l1*lc2*sin(q2)*(q1dot + q2dot);
+C(2, 1) = m2*l1*lc2*sin(q2)*q1dot;
+C(2, 2) = 0;
+
+%External forces (gravity etc)
+N(1,1) = m1*g*lc1*cos(q1) + m2*g*(l1*cos(q1)+lc2*cos(q1 +q2));
+N(2,1) = m2*g*lc2*cos(q1 + q2);
+
+%defining the control law
+[qd, vd, ad] = cubicpoly([0, 2, 4], [0, pi/2, 0], [0, 0, 0], t);
+cmd_val = [qd, vd, ad];
+Kp1 = 50 ; Kd1 =10;
+Kp2 = 50; Kd2 = 10;
+
+
+tau(1,1) = Kp1*(qd - q1) + Kd1*(vd - q1dot);
+tau(2,1) = Kp2*(qd - q2) + Kd2*(vd - q2dot);
+error = [qd - q1 qd - q2 vd - q1dot vd - q2dot]';
+
+%declaring the estimated variables for the feed forward equation
+Mq_hat = 0.9*M; Cq_hat = 0.9*C; Nq_hat = 0.9*N;
+
+%feed forward torque equation
+tau_FF = Mq_hat*[ad;ad] +Cq_hat*[vd;vd]+ Nq_hat;
+
+%feed forward + feed back equation
+tau = tau+ tau_FF;
+
+
+%employing the limitations
+if (tau(1,1)<= -50)
+tau(1,1) = -50;
+end
+if (tau(1,1) >= 50)
+tau(1,1) = 50;
+end
+if (tau(2,1)<= -50)
+tau(2,1) = -50;
+end
+if (tau(2,1) >= 50)
+tau(2,1) = 50;
+end
+
+xdot = inv(M)*(tau - N -C*[q1dot;q2dot]);
+xdot(4,1) = xdot(2,1);
+xdot(2,1) = xdot(1,1);
+xdot(1,1) = x(2);
+xdot(3,1) = x(4);
+
+end %function end
+
+q0 = [0.05 0 0.05 0]';
+[t,x]=ode45(@(t,x) HW3_Q6(t,x),0:0.01:4,q0);
+tau = zeros(length(t), 2);
+error = zeros(length(t), 4);
+cmd_val = zeros(length(t), 3);
+for i = 1:length(t)
+[~, tau(i, :),error(i,:),cmd_val(i,:)] = HW3_Q6(t(i), x(i, :));
+end
+
+figure(1)
+hold on
+plot(t,x(:,1),'black')
+plot(t,x(:,3),'red')
+xlabel('time')
+ylabel('theta')
+title('Robot Joint Position Response')
+legend('joint response 1','joint response 2')
+hold off
+
+figure(2)
+hold on
+plot(t,tau(:,1),'black')
+plot(t,tau(:,2),'red')
+xlabel('time')
+ylabel('Nm')
+title('Robot Torque Response')
+legend('joint torque 1','joint torque 2')
+hold off
+
+figure(3)
+hold on
+plot(t,error(:,1),'black')
+plot(t,error(:,2),'red')
+title('Position Error')
+xlabel('time')
+ylabel('m')
+legend('position error 1','position error 2')
+hold off
+
+figure(4)
+hold on
+plot(t,error(:,3),'black')
+plot(t,error(:,4),'red')
+title('Velocity Error')
+xlabel('time')
+ylabel('m/s')
+legend('velocity error 1','velocity error 2')
+hold off
+
+figure(5)
+plot(t,cmd_val(:,1),'black')
+xlabel('time')
+ylabel('position')
+title('Reference Postion')
+figure(6)
+plot(t,cmd_val(:,2),'black')
+xlabel('time')
+ylabel('velocity')
+title('Reference Velocity')
+figure(7)
+plot(t,cmd_val(:,3),'black')
+xlabel('time')
+ylabel('acceleration')
+title('Reference Acceleration')
+
+disp('Problem 5b: Impact of Reduced Dynamic Model on System Performance');
+disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-');
+
+% Position
+disp('Position:');
+disp('In problem 5b, the system will exhibit higher position tracking errors');
+disp('due to the reduced compensation of dynamic forces.');
+disp('The PD controller has to compensate for this underestimation, leading');
+disp('to more oscillations or slower response times.');
+disp(' ');
+
+% Velocity
+disp('Velocity:');
+disp('The velocity tracking error is larger in problem 5b as well, as the');
+disp('system cannot follow the desired velocity as closely without the full');
+disp('compensation from the dynamics.');
+disp(' ');
+
+% Acceleration
+disp('Acceleration:');
+disp('Problem 5b will show larger acceleration tracking errors, especially');
+disp('during phases of rapid changes in acceleration, since the underestimation');
+disp('of M, C, and N reduces the controller''s ability to match the desired dynamics.');
+disp(' ');
+
+% General Conclusion
+disp('Conclusion:');
+disp('In general, the reduced dynamic model in problem 5b results in higher tracking');
+disp('errors (in terms of position, velocity, and acceleration), requiring the PD');
+disp('controller to work harder and leading to a slight degradation in performance.');
+disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-');
+
+
+##### SOURCE END #####
+-->
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>p2</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-18">
+<meta name="DC.source" content="p2.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="comment">%P2</span>
+
+<span class="comment">% Define the time span and initial conditions</span>
+tspan = [0 4]; <span class="comment">% from 0 to 4 seconds</span>
+x0 = [0; 0; 0; 0]; <span class="comment">% initial conditions for [q1, q1dot, q2, q2dot]</span>
+
+<span class="comment">% Define the desired trajectory as a function of time</span>
+<span class="keyword">function</span> qd = desired_trajectory(t)
+    <span class="keyword">if</span> t &lt; 2
+        qd = [pi/2; pi/2]; <span class="comment">% step to π/2 radians</span>
+    <span class="keyword">else</span>
+        qd = [0; 0]; <span class="comment">% step back to 0 radians</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% Define the system of differential equations</span>
+<span class="keyword">function</span> xdot = robot_dynamics(t, x, para)
+    <span class="comment">% Extract joint positions and velocities</span>
+    q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+
+    <span class="comment">% Desired trajectory at time t</span>
+    qd = desired_trajectory(t);
+    q1d = qd(1);
+    q2d = qd(2);
+
+    <span class="comment">% Mass/inertia matrix D(q)</span>
+    D = zeros(2, 2);
+    D(1,1) = para.m1*para.lc1^2 + para.m2*(para.l1^2 + para.lc2^2 + 2*para.l1*para.lc2*cos(q2)) + para.I1 + para.I2;
+    D(1,2) = para.m2*(para.lc2^2 + para.l1*para.lc2*cos(q2)) + para.I2;
+    D(2,1) = D(1,2);
+    D(2,2) = para.m2*para.lc2^2 + para.I2;
+
+    <span class="comment">% Coriolis matrix C(q,qdot)</span>
+    C = zeros(2, 2);
+    C(1, 1) = -para.m2*para.l1*para.lc2*sin(q2)*q2dot;
+    C(1, 2) = -para.m2*para.l1*para.lc2*sin(q2)*(q1dot + q2dot);
+    C(2, 1) = para.m2*para.l1*para.lc2*sin(q2)*q1dot;
+    C(2, 2) = 0;
+
+    <span class="comment">% Gravity terms N(q)</span>
+    N = zeros(2, 1);
+    N(1) = para.m1*para.g*para.lc1*cos(q1) + para.m2*para.g*(para.l1*cos(q1) + para.lc2*cos(q1 + q2));
+    N(2) = para.m2*para.g*para.lc2*cos(q1 + q2);
+
+    <span class="comment">% PD control torques</span>
+    tau = zeros(2, 1);
+    tau(1) = para.Kp1*(q1d - q1) - para.Kd1*q1dot;
+    tau(2) = para.Kp2*(q2d - q2) - para.Kd2*q2dot;
+
+    <span class="comment">% Limit the torques to the range [-50, 50]</span>
+    tau(1) = max(min(tau(1), 50), -50);
+    tau(2) = max(min(tau(2), 50), -50);
+
+    <span class="comment">% Calculate accelerations</span>
+    a = tau - C * [q1dot; q2dot] - N;
+
+    <span class="comment">% Solve for joint accelerations using inverse of D matrix</span>
+    qddot = D \ a;
+
+    <span class="comment">% Return derivative of state vector</span>
+    xdot = [q1dot; qddot(1); q2dot; qddot(2)];
+<span class="keyword">end</span>
+
+<span class="comment">% Define parameters for the robot arm</span>
+para.m1 = 7.848;
+para.m2 = 4.49;
+para.l1 = 0.3;
+para.lc1 = 0.1554;
+para.lc2 = 0.0341;
+para.I1 = 0.176;
+para.I2 = 0.0411;
+para.g = 9.81;
+para.Kp1 = 50;
+para.Kp2 = 50;
+para.Kd1 = 10;
+para.Kd2 = 10;
+
+<span class="comment">% Solve the differential equations using ODE45</span>
+[t, x] = ode45(@(t,x) robot_dynamics(t, x, para), tspan, x0);
+
+<span class="comment">% Calculate torques and tracking errors over time</span>
+tau1 = zeros(length(t), 1);
+tau2 = zeros(length(t), 1);
+tracking_error_q1 = zeros(length(t), 1);
+tracking_error_q2 = zeros(length(t), 1);
+
+<span class="keyword">for</span> i = 1:length(t)
+    qd = desired_trajectory(t(i));
+    q1d = qd(1);
+    q2d = qd(2);
+
+    <span class="comment">% Extract current states</span>
+    q1 = x(i, 1);
+    q1dot = x(i, 2);
+    q2 = x(i, 3);
+    q2dot = x(i, 4);
+
+    <span class="comment">% Calculate PD control torques</span>
+    tau1(i) = para.Kp1 * (q1d - q1) - para.Kd1 * q1dot;
+    tau2(i) = para.Kp2 * (q2d - q2) - para.Kd2 * q2dot;
+
+    <span class="comment">% Limit the torques to the range [-50, 50]</span>
+    tau1(i) = max(min(tau1(i), 50), -50);
+    tau2(i) = max(min(tau2(i), 50), -50);
+
+    <span class="comment">% Calculate tracking errors</span>
+    tracking_error_q1(i) = q1d - q1;
+    tracking_error_q2(i) = q2d - q2;
+<span class="keyword">end</span>
+
+<span class="comment">% Plot joint responses with desired trajectory</span>
+figure;
+subplot(3, 1, 1);
+plot(t, x(:, 1), <span class="string">'r'</span>, t, x(:, 3), <span class="string">'b'</span>);
+hold <span class="string">on</span>;
+qd_plot = arrayfun(@desired_trajectory, t, <span class="string">'UniformOutput'</span>, false);
+qd1 = cellfun(@(qd) qd(1), qd_plot); <span class="comment">% Extract q1d for all time steps</span>
+qd2 = cellfun(@(qd) qd(2), qd_plot); <span class="comment">% Extract q2d for all time steps</span>
+plot(t, qd1, <span class="string">'--r'</span>, t, qd2, <span class="string">'--b'</span>); <span class="comment">% Plot desired trajectories</span>
+hold <span class="string">off</span>;
+title(<span class="string">'Joint Angles and Desired Trajectories'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Angle (rad)'</span>);
+legend(<span class="string">'q_1'</span>, <span class="string">'q_2'</span>, <span class="string">'q_{1d}'</span>, <span class="string">'q_{2d}'</span>);
+
+<span class="comment">% Plot joint torques</span>
+subplot(3, 1, 2);
+plot(t, tau1, <span class="string">'r'</span>, t, tau2, <span class="string">'b'</span>);
+title(<span class="string">'Joint Torques'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Torque (Nm)'</span>);
+legend(<span class="string">'\tau_1'</span>, <span class="string">'\tau_2'</span>);
+ylim([-50 50]);  <span class="comment">% Set y-axis limits from -100 to +100</span>
+
+
+<span class="comment">% Plot tracking errors</span>
+subplot(3, 1, 3);
+plot(t, tracking_error_q1, <span class="string">'r'</span>, t, tracking_error_q2, <span class="string">'b'</span>);
+hold <span class="string">on</span>;
+plot(t, zeros(size(t)), <span class="string">'--k'</span>); <span class="comment">% Plot zero line for perfect tracking</span>
+hold <span class="string">off</span>;
+title(<span class="string">'Tracking Errors'</span>);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Error (rad)'</span>);
+legend(<span class="string">'Error q_1'</span>, <span class="string">'Error q_2'</span>);
+
+disp(<span class="string">"In theory, the answer is yes, but with certain conditions and limitations:"</span>)
+
+disp(<span class="string">"Proportional Gain (Kp):"</span>)
+disp(<span class="string">"Increasing Kp can reduce the steady-state error. A higher Kp will make the system more responsive by increasing the corrective torque based on the error in position."</span>)
+disp(<span class="string">"However, too high of a Kp can cause overshoot and oscillations, where the system overshoots the desired value and keeps oscillating around it before settling down."</span>)
+
+disp(<span class="string">"Derivative Gain (Kd):"</span>)
+disp(<span class="string">"Increasing Kd improves the damping of the system. It reduces oscillations and overshoot by responding to the rate of change of the error (i.e., velocity)."</span>)
+disp(<span class="string">"However, if Kd is too high, it can make the system sluggish or even unstable in the presence of noise, since the derivative term amplifies high-frequency signals (like noise or rapid changes)."</span>)
+
+disp(<span class="string">"Eliminating the Error:"</span>)
+disp(<span class="string">"For a PD controller, there is no integral term, so steady-state error might not completely disappear unless the proportional and derivative gains are perfectly tuned."</span>)
+disp(<span class="string">"A PI (Proportional-Integral) or PID controller (adding an integral term) is typically required to eliminate steady-state errors completely."</span>)
+disp(<span class="string">"With PD control, reducing the tracking error largely depends on how well-tuned Kp and Kd are. The best you can achieve is minimizing the error, but it may not be possible to eliminate it entirely without integral action."</span>)
+</pre>
+<pre class="codeoutput">In theory, the answer is yes, but with certain conditions and limitations:
+Proportional Gain (Kp):
+Increasing Kp can reduce the steady-state error. A higher Kp will make the system more responsive by increasing the corrective torque based on the error in position.
+However, too high of a Kp can cause overshoot and oscillations, where the system overshoots the desired value and keeps oscillating around it before settling down.
+Derivative Gain (Kd):
+Increasing Kd improves the damping of the system. It reduces oscillations and overshoot by responding to the rate of change of the error (i.e., velocity).
+However, if Kd is too high, it can make the system sluggish or even unstable in the presence of noise, since the derivative term amplifies high-frequency signals (like noise or rapid changes).
+Eliminating the Error:
+For a PD controller, there is no integral term, so steady-state error might not completely disappear unless the proportional and derivative gains are perfectly tuned.
+A PI (Proportional-Integral) or PID controller (adding an integral term) is typically required to eliminate steady-state errors completely.
+With PD control, reducing the tracking error largely depends on how well-tuned Kp and Kd are. The best you can achieve is minimizing the error, but it may not be possible to eliminate it entirely without integral action.
+</pre>
+<img vspace="5" hspace="5" src="p2_01.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%P2
+
+% Define the time span and initial conditions
+tspan = [0 4]; % from 0 to 4 seconds
+x0 = [0; 0; 0; 0]; % initial conditions for [q1, q1dot, q2, q2dot]
+
+% Define the desired trajectory as a function of time
+function qd = desired_trajectory(t)
+    if t < 2
+        qd = [pi/2; pi/2]; % step to π/2 radians
+    else
+        qd = [0; 0]; % step back to 0 radians
+    end
+end
+
+% Define the system of differential equations
+function xdot = robot_dynamics(t, x, para)
+    % Extract joint positions and velocities
+    q1 = x(1); q1dot = x(2); q2 = x(3); q2dot = x(4);
+    
+    % Desired trajectory at time t
+    qd = desired_trajectory(t);
+    q1d = qd(1);
+    q2d = qd(2);
+
+    % Mass/inertia matrix D(q)
+    D = zeros(2, 2);
+    D(1,1) = para.m1*para.lc1^2 + para.m2*(para.l1^2 + para.lc2^2 + 2*para.l1*para.lc2*cos(q2)) + para.I1 + para.I2;
+    D(1,2) = para.m2*(para.lc2^2 + para.l1*para.lc2*cos(q2)) + para.I2;
+    D(2,1) = D(1,2);
+    D(2,2) = para.m2*para.lc2^2 + para.I2;
+
+    % Coriolis matrix C(q,qdot)
+    C = zeros(2, 2);
+    C(1, 1) = -para.m2*para.l1*para.lc2*sin(q2)*q2dot;
+    C(1, 2) = -para.m2*para.l1*para.lc2*sin(q2)*(q1dot + q2dot);
+    C(2, 1) = para.m2*para.l1*para.lc2*sin(q2)*q1dot;
+    C(2, 2) = 0;
+
+    % Gravity terms N(q)
+    N = zeros(2, 1);
+    N(1) = para.m1*para.g*para.lc1*cos(q1) + para.m2*para.g*(para.l1*cos(q1) + para.lc2*cos(q1 + q2));
+    N(2) = para.m2*para.g*para.lc2*cos(q1 + q2);
+
+    % PD control torques
+    tau = zeros(2, 1);
+    tau(1) = para.Kp1*(q1d - q1) - para.Kd1*q1dot;
+    tau(2) = para.Kp2*(q2d - q2) - para.Kd2*q2dot;
+
+    % Limit the torques to the range [-50, 50]
+    tau(1) = max(min(tau(1), 50), -50);
+    tau(2) = max(min(tau(2), 50), -50);
+
+    % Calculate accelerations
+    a = tau - C * [q1dot; q2dot] - N;
+    
+    % Solve for joint accelerations using inverse of D matrix
+    qddot = D \ a;
+
+    % Return derivative of state vector
+    xdot = [q1dot; qddot(1); q2dot; qddot(2)];
+end
+
+% Define parameters for the robot arm
+para.m1 = 7.848;
+para.m2 = 4.49;
+para.l1 = 0.3;
+para.lc1 = 0.1554;
+para.lc2 = 0.0341;
+para.I1 = 0.176;
+para.I2 = 0.0411;
+para.g = 9.81;
+para.Kp1 = 50;
+para.Kp2 = 50;
+para.Kd1 = 10;
+para.Kd2 = 10;
+
+% Solve the differential equations using ODE45
+[t, x] = ode45(@(t,x) robot_dynamics(t, x, para), tspan, x0);
+
+% Calculate torques and tracking errors over time
+tau1 = zeros(length(t), 1);
+tau2 = zeros(length(t), 1);
+tracking_error_q1 = zeros(length(t), 1);
+tracking_error_q2 = zeros(length(t), 1);
+
+for i = 1:length(t)
+    qd = desired_trajectory(t(i));
+    q1d = qd(1);
+    q2d = qd(2);
+    
+    % Extract current states
+    q1 = x(i, 1);
+    q1dot = x(i, 2);
+    q2 = x(i, 3);
+    q2dot = x(i, 4);
+    
+    % Calculate PD control torques
+    tau1(i) = para.Kp1 * (q1d - q1) - para.Kd1 * q1dot;
+    tau2(i) = para.Kp2 * (q2d - q2) - para.Kd2 * q2dot;
+    
+    % Limit the torques to the range [-50, 50]
+    tau1(i) = max(min(tau1(i), 50), -50);
+    tau2(i) = max(min(tau2(i), 50), -50);
+
+    % Calculate tracking errors
+    tracking_error_q1(i) = q1d - q1;
+    tracking_error_q2(i) = q2d - q2;
+end
+
+% Plot joint responses with desired trajectory
+figure;
+subplot(3, 1, 1);
+plot(t, x(:, 1), 'r', t, x(:, 3), 'b');
+hold on;
+qd_plot = arrayfun(@desired_trajectory, t, 'UniformOutput', false);
+qd1 = cellfun(@(qd) qd(1), qd_plot); % Extract q1d for all time steps
+qd2 = cellfun(@(qd) qd(2), qd_plot); % Extract q2d for all time steps
+plot(t, qd1, 'REPLACE_WITH_DASH_DASHr', t, qd2, 'REPLACE_WITH_DASH_DASHb'); % Plot desired trajectories
+hold off;
+title('Joint Angles and Desired Trajectories');
+xlabel('Time (s)');
+ylabel('Angle (rad)');
+legend('q_1', 'q_2', 'q_{1d}', 'q_{2d}');
+
+% Plot joint torques
+subplot(3, 1, 2);
+plot(t, tau1, 'r', t, tau2, 'b');
+title('Joint Torques');
+xlabel('Time (s)');
+ylabel('Torque (Nm)');
+legend('\tau_1', '\tau_2');
+ylim([-50 50]);  % Set y-axis limits from -100 to +100
+
+
+% Plot tracking errors
+subplot(3, 1, 3);
+plot(t, tracking_error_q1, 'r', t, tracking_error_q2, 'b');
+hold on;
+plot(t, zeros(size(t)), 'REPLACE_WITH_DASH_DASHk'); % Plot zero line for perfect tracking
+hold off;
+title('Tracking Errors');
+xlabel('Time (s)');
+ylabel('Error (rad)');
+legend('Error q_1', 'Error q_2');
+
+disp("In theory, the answer is yes, but with certain conditions and limitations:")
+
+disp("Proportional Gain (Kp):")
+disp("Increasing Kp can reduce the steady-state error. A higher Kp will make the system more responsive by increasing the corrective torque based on the error in position.")
+disp("However, too high of a Kp can cause overshoot and oscillations, where the system overshoots the desired value and keeps oscillating around it before settling down.")
+
+disp("Derivative Gain (Kd):")
+disp("Increasing Kd improves the damping of the system. It reduces oscillations and overshoot by responding to the rate of change of the error (i.e., velocity).")
+disp("However, if Kd is too high, it can make the system sluggish or even unstable in the presence of noise, since the derivative term amplifies high-frequency signals (like noise or rapid changes).")
+
+disp("Eliminating the Error:")
+disp("For a PD controller, there is no integral term, so steady-state error might not completely disappear unless the proportional and derivative gains are perfectly tuned.")
+disp("A PI (Proportional-Integral) or PID controller (adding an integral term) is typically required to eliminate steady-state errors completely.")
+disp("With PD control, reducing the tracking error largely depends on how well-tuned Kp and Kd are. The best you can achieve is minimizing the error, but it may not be possible to eliminate it entirely without integral action.")
+
+##### SOURCE END #####
+-->
+</body>
+</html>

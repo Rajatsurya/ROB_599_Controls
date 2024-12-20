@@ -1,0 +1,21 @@
+clear all
+close all
+clc
+J=10;
+rlocus([1 0.4],[J 0 0])
+kP=16; kD=0.4*kP; thcmd = pi/2;
+[T,X] = ode45(@(t,x) myode(t,x,J,kP,kD,thcmd), [0:0.01:25], [0 0]');
+figure
+plot(T,X(:,1), 'LineWidth', 2), hold on, line([T(1) T(end)], [thcmd thcmd],
+'Color', 'r', 'LineStyle', '--', 'LineWidth', 2)
+xlabel('t [sec]'); ylabel('\theta [rad]'), grid
+legend('$\theta$', '$\theta_{cmd}$', 'Interpreter', 'latex')
+figure
+plot(T, kP*(thcmd-X(:,1))-kD*X(:,2), 'LineWidth', 2)
+xlabel('t [sec]'); ylabel('u [N m]'), grid
+function xdot=myode(t,x,J,kP,kD,thcmd)
+xdot = zeros(2,1);
+u = kP*(thcmd-x(1))-kD*x(2);
+xdot(1) = x(2);
+xdot(2) = 1/J*u;
+end

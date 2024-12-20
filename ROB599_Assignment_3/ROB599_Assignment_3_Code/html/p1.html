@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>p1</title>
+<meta name="generator" content="MATLAB 24.1">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-10-11">
+<meta name="DC.source" content="p1.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">clc;
+
+<span class="comment">% mass terms</span>
+syms <span class="string">m1</span> <span class="string">m2</span>
+
+<span class="comment">% geometry terms</span>
+syms <span class="string">l1</span> <span class="string">l2</span> <span class="string">lc1</span> <span class="string">lc2</span>
+
+<span class="comment">% Inertia Terms</span>
+syms <span class="string">I1</span> <span class="string">I2</span>
+
+<span class="comment">% displacement</span>
+syms <span class="string">q1</span> <span class="string">q2</span>
+
+<span class="comment">% velocity</span>
+syms <span class="string">q1dot</span> <span class="string">q2dot</span>
+
+<span class="comment">% acceleration</span>
+syms <span class="string">a1</span> <span class="string">a2</span>
+
+<span class="comment">% Forces</span>
+syms <span class="string">tau1</span> <span class="string">tau2</span>
+
+<span class="comment">% Gravitational constant</span>
+syms <span class="string">g</span>
+
+<span class="comment">% Inertia matrix D</span>
+D = sym(zeros(2, 2));
+D(1,1) = m1*lc1^2 + m2*(l1^2 + lc2^2 + 2*l1*lc2*cos(q2)) + I1 + I2;
+D(1,2) = m2*(lc2^2 + l1*lc2*cos(q2)) + I2;
+D(2,1) = D(1,2);
+D(2,2) = m2*lc2^2 + I2;
+
+<span class="comment">% Coriolis matrix C</span>
+C = sym(zeros(2, 2));
+C(1, 1) = -m2*l1*lc2*sin(q2)*q2dot;
+C(1, 2) = -m2*l1*lc2*sin(q2)*(q1dot + q2dot);
+C(2, 1) = m2*l1*lc2*sin(q2)*q1dot;
+C(2, 2) = 0;
+
+<span class="comment">% Gravity vector N</span>
+N = sym(zeros(2, 1));
+N(1) = m1*g*lc1*cos(q1) + m2*g*(l1*cos(q1) + lc2*cos(q1 + q2));
+N(2) = m2*g*lc2*cos(q1 + q2);
+
+<span class="comment">% Force vector T</span>
+T = sym(zeros(2, 1));
+T(1) = tau1;
+T(2) = tau2;
+
+<span class="comment">% Velocity vector V</span>
+V = sym(zeros(2, 1));
+V(1) = q1dot;
+V(2) = q2dot;
+
+<span class="comment">% Determinant of D</span>
+det_D = det(D);
+
+<span class="comment">% Compute accelerations a1 and a2 using determinant</span>
+a = (1/det_D) * [D(2,2), -D(1,2); -D(2,1), D(1,1)] * (T - C*V - N);
+a1 = a(1);
+a2 = a(2);
+
+disp(<span class="string">'Acceleration a1:'</span>);
+disp(a1);
+disp(<span class="string">'Acceleration a2:'</span>);
+disp(a2);
+
+<span class="comment">% Substituting given values for m1, m2, l1, lc1, lc2, I1, I2, g</span>
+m1_val = 7.848;
+m2_val = 4.49;
+l1_val = 0.3;
+lc1_val = 0.1554;
+lc2_val = 0.0341;
+I1_val = 0.176;
+I2_val = 0.0411;
+g_val = 9.81;
+
+<span class="comment">% Substituting these values into the symbolic expressions</span>
+a1_val = subs(a1, [m1, m2, l1, lc1, lc2, I1, I2, g], [m1_val, m2_val, l1_val, lc1_val, lc2_val, I1_val, I2_val, g_val]);
+a2_val = subs(a2, [m1, m2, l1, lc1, lc2, I1, I2, g], [m1_val, m2_val, l1_val, lc1_val, lc2_val, I1_val, I2_val, g_val]);
+
+disp(<span class="string">'Evaluated acceleration a1:'</span>);
+disp(a1_val);
+disp(<span class="string">'Evaluated acceleration a2:'</span>);
+disp(a2_val);
+</pre>
+<pre class="codeoutput">Acceleration a1:
+((m2*lc2^2 + I2)*(tau1 - g*m2*(lc2*cos(q1 + q2) + l1*cos(q1)) - g*lc1*m1*cos(q1) + l1*lc2*m2*q2dot*sin(q2)*(q1dot + q2dot) + l1*lc2*m2*q1dot*q2dot*sin(q2)))/(- l1^2*lc2^2*m2^2*cos(q2)^2 + l1^2*lc2^2*m2^2 + I2*l1^2*m2 + m1*lc1^2*lc2^2*m2 + I2*m1*lc1^2 + I1*lc2^2*m2 + I1*I2) + ((I2 + m2*(lc2^2 + l1*cos(q2)*lc2))*(l1*lc2*m2*sin(q2)*q1dot^2 - tau2 + g*lc2*m2*cos(q1 + q2)))/(- l1^2*lc2^2*m2^2*cos(q2)^2 + l1^2*lc2^2*m2^2 + I2*l1^2*m2 + m1*lc1^2*lc2^2*m2 + I2*m1*lc1^2 + I1*lc2^2*m2 + I1*I2)
+ 
+Acceleration a2:
+- ((l1*lc2*m2*sin(q2)*q1dot^2 - tau2 + g*lc2*m2*cos(q1 + q2))*(I1 + I2 + lc1^2*m1 + m2*(l1^2 + 2*cos(q2)*l1*lc2 + lc2^2)))/(- l1^2*lc2^2*m2^2*cos(q2)^2 + l1^2*lc2^2*m2^2 + I2*l1^2*m2 + m1*lc1^2*lc2^2*m2 + I2*m1*lc1^2 + I1*lc2^2*m2 + I1*I2) - ((I2 + m2*(lc2^2 + l1*cos(q2)*lc2))*(tau1 - g*m2*(lc2*cos(q1 + q2) + l1*cos(q1)) - g*lc1*m1*cos(q1) + l1*lc2*m2*q2dot*sin(q2)*(q1dot + q2dot) + l1*lc2*m2*q1dot*q2dot*sin(q2)))/(- l1^2*lc2^2*m2^2*cos(q2)^2 + l1^2*lc2^2*m2^2 + I2*l1^2*m2 + m1*lc1^2*lc2^2*m2 + I2*m1*lc1^2 + I1*lc2^2*m2 + I1*I2)
+ 
+Evaluated acceleration a1:
+- (463210169*(tau1 - (150199929*cos(q1 + q2))/100000000 - (98352117*cos(q1))/3906250 + (459327*q1dot*q2dot*sin(q2))/10000000 + (459327*q2dot*sin(q2)*(q1dot + q2dot))/10000000))/(10000000000*((210981292929*cos(q2)^2)/100000000000000 - 1114053181780229681/31250000000000000000)) - (((459327*cos(q2))/10000000 + 463210169/10000000000)*((459327*sin(q2)*q1dot^2)/10000000 - tau2 + (150199929*cos(q1 + q2))/100000000))/((210981292929*cos(q2)^2)/100000000000000 - 1114053181780229681/31250000000000000000)
+ 
+Evaluated acceleration a2:
+(((459327*cos(q2))/5000000 + 40797181229/50000000000)*((459327*sin(q2)*q1dot^2)/10000000 - tau2 + (150199929*cos(q1 + q2))/100000000))/((210981292929*cos(q2)^2)/100000000000000 - 1114053181780229681/31250000000000000000) + (((459327*cos(q2))/10000000 + 463210169/10000000000)*(tau1 - (150199929*cos(q1 + q2))/100000000 - (98352117*cos(q1))/3906250 + (459327*q1dot*q2dot*sin(q2))/10000000 + (459327*q2dot*sin(q2)*(q1dot + q2dot))/10000000))/((210981292929*cos(q2)^2)/100000000000000 - 1114053181780229681/31250000000000000000)
+ 
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024a</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+clc;
+
+% mass terms
+syms m1 m2
+
+% geometry terms
+syms l1 l2 lc1 lc2
+
+% Inertia Terms
+syms I1 I2
+
+% displacement
+syms q1 q2
+
+% velocity
+syms q1dot q2dot
+
+% acceleration
+syms a1 a2
+
+% Forces
+syms tau1 tau2
+
+% Gravitational constant
+syms g
+
+% Inertia matrix D
+D = sym(zeros(2, 2));
+D(1,1) = m1*lc1^2 + m2*(l1^2 + lc2^2 + 2*l1*lc2*cos(q2)) + I1 + I2;
+D(1,2) = m2*(lc2^2 + l1*lc2*cos(q2)) + I2;
+D(2,1) = D(1,2);
+D(2,2) = m2*lc2^2 + I2;
+
+% Coriolis matrix C
+C = sym(zeros(2, 2));
+C(1, 1) = -m2*l1*lc2*sin(q2)*q2dot;
+C(1, 2) = -m2*l1*lc2*sin(q2)*(q1dot + q2dot);
+C(2, 1) = m2*l1*lc2*sin(q2)*q1dot;
+C(2, 2) = 0;
+
+% Gravity vector N
+N = sym(zeros(2, 1));
+N(1) = m1*g*lc1*cos(q1) + m2*g*(l1*cos(q1) + lc2*cos(q1 + q2));
+N(2) = m2*g*lc2*cos(q1 + q2);
+
+% Force vector T
+T = sym(zeros(2, 1));
+T(1) = tau1;
+T(2) = tau2;
+
+% Velocity vector V
+V = sym(zeros(2, 1));
+V(1) = q1dot;
+V(2) = q2dot;
+
+% Determinant of D
+det_D = det(D);
+
+% Compute accelerations a1 and a2 using determinant
+a = (1/det_D) * [D(2,2), -D(1,2); -D(2,1), D(1,1)] * (T - C*V - N);
+a1 = a(1);
+a2 = a(2);
+
+disp('Acceleration a1:');
+disp(a1);
+disp('Acceleration a2:');
+disp(a2);
+
+% Substituting given values for m1, m2, l1, lc1, lc2, I1, I2, g
+m1_val = 7.848;
+m2_val = 4.49;
+l1_val = 0.3;
+lc1_val = 0.1554;
+lc2_val = 0.0341;
+I1_val = 0.176;
+I2_val = 0.0411;
+g_val = 9.81;
+
+% Substituting these values into the symbolic expressions
+a1_val = subs(a1, [m1, m2, l1, lc1, lc2, I1, I2, g], [m1_val, m2_val, l1_val, lc1_val, lc2_val, I1_val, I2_val, g_val]);
+a2_val = subs(a2, [m1, m2, l1, lc1, lc2, I1, I2, g], [m1_val, m2_val, l1_val, lc1_val, lc2_val, I1_val, I2_val, g_val]);
+
+disp('Evaluated acceleration a1:');
+disp(a1_val);
+disp('Evaluated acceleration a2:');
+disp(a2_val);
+
+##### SOURCE END #####
+-->
+</body>
+</html>
